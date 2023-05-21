@@ -68,3 +68,24 @@ func TestManger_002(t *testing.T) {
 	signal.Notify(ch, os.Interrupt)
 	<-ch
 }
+
+func TestManger_003(t *testing.T) {
+	m := NewManager()
+
+	_ = m.Add(NewTask("a", func(ctx *Context) {
+		fmt.Println(time.Now())
+		time.Sleep(5 * time.Second)
+		fmt.Println(time.Now())
+		fmt.Println("canceled:", ctx.IsCanceled())
+	}, 3))
+
+	go func() {
+		time.Sleep(5 * time.Second)
+		_ = m.Delete("a")
+	}()
+
+	// waiting to be interrupted
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	<-ch
+}

@@ -1,7 +1,16 @@
 package go_task
 
 type Context struct {
-	values map[any]any
+	values   map[any]any
+	canceled bool
+}
+
+func (ctx *Context) IsCanceled() bool {
+	return ctx.canceled
+}
+
+func (ctx *Context) setCanceled() {
+	ctx.canceled = true
 }
 
 func (ctx *Context) GetValue(key any) (any, bool) {

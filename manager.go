@@ -78,6 +78,7 @@ func (m *Manager) Delete(key string) error {
 	if task, ok := m.items[key]; !ok {
 		return fmt.Errorf("not existed key: %v", key)
 	} else {
+		task.ctx.setCanceled()
 		m.readyQueue.Remove(task.e)
 		delete(m.items, key)
 	}
