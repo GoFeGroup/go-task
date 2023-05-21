@@ -15,7 +15,7 @@ func TestManger_001(t *testing.T) {
 	fmt.Println("before add ")
 	for i := 0; i < 10; i++ {
 		x := i
-		err := m.Add(NewTask(fmt.Sprintf("abcf-%v", i), func() {
+		err := m.Add(NewTask(fmt.Sprintf("abcf-%v", i), func(ctx *Context) {
 			fmt.Printf("%d func %d\n", time.Now().Unix(), x)
 		}, 3+i))
 		Throw(err)
@@ -46,4 +46,25 @@ func Throw(e any) {
 		fmt.Printf("===> %s\n", debug.Stack())
 		os.Exit(-1)
 	}
+}
+
+func TestManger_002(t *testing.T) {
+	m := NewManager()
+
+	foo := 0xdeadbeef
+
+	_ = m.Add(NewTask("a", func(ctx *Context) {
+		bar, ok := ctx.GetInt("bar")
+		if !ok {
+			fmt.Println("set bar")
+			ctx.SetValue("bar", foo)
+		} else {
+			fmt.Println(bar)
+		}
+	}, 3))
+
+	// waiting to be interrupted
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	<-ch
 }
