@@ -20,7 +20,7 @@ func (q *queue) Add(task *Task) *list.Element {
 			return q.InsertAfter(task, item)
 		}
 	}
-	return q.PushBack(task)
+	return q.PushFront(task)
 }
 
 type Manager struct {
@@ -67,8 +67,8 @@ func (m *Manager) Add(task *Task) error {
 	if _, ok := m.items[task.key]; ok {
 		return fmt.Errorf("already existed: %v", task.key)
 	}
-	task.e = m.readyQueue.Add(task)
 	m.items[task.key] = task
+	go m.runTask(task)
 	return nil
 }
 
