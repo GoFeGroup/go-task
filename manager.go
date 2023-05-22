@@ -33,7 +33,7 @@ func (m *Manager) runTask(task *Task) {
 	task.Run()
 
 	m.lock.Lock()
-	if _, ok := m.items[task.key]; ok { // 如果没有在items里删除，则继续进行任务
+	if !task.ctx.IsCanceled() {
 		task.e = m.readyQueue.Add(task)
 	}
 	m.lock.Unlock()
