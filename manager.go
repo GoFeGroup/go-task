@@ -46,6 +46,7 @@ func (m *Manager) scheduleOnce() {
 		if !task.Can() {
 			break
 		}
+		task.e = nil
 		m.readyQueue.Remove(item)
 		go m.runTask(task)
 	}
@@ -79,7 +80,9 @@ func (m *Manager) Delete(key string) error {
 		return fmt.Errorf("not existed key: %v", key)
 	} else {
 		task.ctx.setCanceled()
-		m.readyQueue.Remove(task.e)
+		if task.e != nil { // not running state
+			m.readyQueue.Remove(task.e)
+		}
 		delete(m.items, key)
 	}
 	return nil
