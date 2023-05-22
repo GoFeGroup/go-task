@@ -46,6 +46,6 @@ func (ctx *Context) GetInt(key any) (int, bool) {
 	return 0, false
 }
 
-func newContext() *Context {
+func NewContext() *Context {
 	return &Context{}
 }

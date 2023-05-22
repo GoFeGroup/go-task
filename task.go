@@ -31,13 +31,17 @@ func (t *Task) NextTick() int64 {
 }
 
 func NewTask(key string, fn func(*Context), interval int) *Task {
+	return NewTaskWithContext(key, fn, interval, NewContext())
+}
+
+func NewTaskWithContext(key string, fn func(*Context), interval int, ctx *Context) *Task {
 	t := &Task{
 		key:        key,
 		fn:         fn,
 		interval:   interval,
 		createTime: time.Now(),
 		nextTime:   time.Now().Add(time.Second * time.Duration(interval)),
-		ctx:        newContext(),
+		ctx:        ctx,
 	}
 	return t
 }
