@@ -18,3 +18,15 @@ func TestContext_Get002(t *testing.T) {
 	ctx.SetValue("3333", "4444")
 	fmt.Println(ctx.GetInt("3333"))
 }
+
+func TestContext_Get003(t *testing.T) {
+	ctx := newContext()
+	ctx.SetValue("3333", 4444)
+	fmt.Println(ctx.GetInt("3333"))
+}
+
+func TestContext_Get004(t *testing.T) {
+	ctx := newContext()
+	ctx.SetValue("3333", 4444)
+	fmt.Println(ctx.GetString("3333"))
+}
